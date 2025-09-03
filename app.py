@@ -91,7 +91,37 @@ def get_idea_id(idea_id):                         #since it is path param so we 
 
 
 
+'''
+Endpoint for update the idea
+'''
+@app.put("/ideaapp/api/v1/ideas/<idea_id>")
+def update_idea(idea_id):
+    try:
+        if int(idea_id) in ideas:
+            ideas[int(idea_id)] =request.get_json()  #here we are checking request body and what ever be request body we will update that in ideas[int(idea_id)]
+            return ideas[int(idea_id)],200
+        else:
+            return "Idea id passed is not present",400
 
+    except :
+        return "Some internal error happened",500
+
+
+'''
+Endpoint to delete an idea
+'''
+@app.delete("/ideaapp/api/v1/ideas/<idea_id>")
+def delete_idea(idea_id):
+    try:
+        if int(idea_id) in ideas:
+            ideas.pop(int(idea_id))   #delete the entry from server
+            return "Idea got successfully removed"
+           
+        else:
+            return "Idea id passed is not present",400
+
+    except :
+        return "Some internal error happened",500
 
 
 

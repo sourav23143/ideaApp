@@ -13,7 +13,7 @@ ideas = {
     },
 
     2: {
-        "id" : 1,
+        "id" : 2,
         "idea_name": "Save soil",
         "idea_discription" : "Details about Saving Soil",
         "idea_author": "Gourav"
@@ -26,7 +26,22 @@ Create an RESTful endpoint for fetching all the ideas
 '''
 @app.get("/ideaapp/api/v1/ideas")  #a decorator which tell whenver anyone call get refer to below function
 def get_all_ideas():
-    #logic to fetch all the ideas
+    #I need to read the query param
+    idea_author = request.args.get('idea_author') #request.args.get('idea_author'): this is used to read the query param
+
+    if idea_author:
+        #filter the idea created by this author
+        idea_res ={}
+        for key, value in ideas.items():
+            if value["idea_author"] == idea_author :
+                idea_res[key]  = value #then put that in idea_res
+
+
+        return idea_res
+    
+
+
+    #logic to fetch all the ideas and support query params
     return ideas   #so this is our control as inside it logic is written to fetch the ideas
 
 '''
@@ -59,6 +74,26 @@ def create_idea():
     except:
         return "Some internal server error", 500
     
+
+'''End point to fetch idea based on id'''
+@app.get("/ideaapp/api/v1/ideas/<idea_id>")   #any thing that is path param must be inside < > angular bracket
+def get_idea_id(idea_id):                         #since it is path param so we also able to make it part of method
+    #any thing inside idea_id is treated as string
+    #but the idea_id is integer so we have to convert it into int
+    try:
+        if int(idea_id) in ideas:
+            return ideas[int(idea_id)],200
+        else:
+            return "Idea id passed is not present",400
+
+    except :
+        return "Some internal error happened",500
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(port=5000 )
